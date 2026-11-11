@@ -2,4 +2,4 @@ pandas
 numpy
 scikit-learn
 scipy
-pulp
+pulp==2.9.0

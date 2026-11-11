@@ -57,7 +57,7 @@ def run(strategy, hz, panel, season="2025-26"):
         for r in h[h.k == 0].itertuples():
             info[r.code] = {"pos": r.position, "team": r.team_id, "price": r.value}
         if strategy == "oracle":  # górna granica: znajomość rzeczywistych punktów
-            a = act[act.GW.between(gw, gw + 2)].set_index(["code", "GW"])["y"]
+            a = act[act.GW.between(gw, gw + 2)].set_index(["code", "GW"])["total_points"]
             pred = {(c, g - gw): v for (c, g), v in a.items()}
         else:
             pred = {(r.code, r.k): getattr(r, col) for r in h.itertuples()}
@@ -81,7 +81,7 @@ def run(strategy, hz, panel, season="2025-26"):
             dec = solve(players, pred_pool, current=squad, bank=bank, ft=ft,
                         free_transfers=(squad is None))
         g = act[act.GW == gw].set_index("code")
-        actual, minutes = g["y"].to_dict(), g["minutes"].to_dict()
+        actual, minutes = g["total_points"].to_dict(), g["minutes"].to_dict()
         pred0 = {c: pred.get((c, 0), 0) for c in dec["squad"]}
         pos = {c: info[c]["pos"] for c in dec["squad"]}
         pts = autosub_points(dec["xi"], dec["squad"], dec["captain"], dec["vice"],

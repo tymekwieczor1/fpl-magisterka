@@ -33,14 +33,17 @@ def solve(players, pred, current=None, bank=100.0, ft=1, free_transfers=False,
     K = range(H)
     cur = set(current or [])
     prob = pulp.LpProblem("fpl", pulp.LpMaximize)
-    x = pulp.LpVariable.dicts("x", (P, K), cat="Binary")   # w składzie
-    s = pulp.LpVariable.dicts("s", (P, K), cat="Binary")   # w wyjściowej XI
-    c = pulp.LpVariable.dicts("c", (P, K), cat="Binary")   # kapitan
-    b = pulp.LpVariable.dicts("b", (P, K), cat="Binary")   # zakup
-    q = pulp.LpVariable.dicts("q", (P, K), cat="Binary")   # sprzedaż
-    hits = pulp.LpVariable.dicts("hits", K, lowBound=0, cat="Integer")
-    f = pulp.LpVariable.dicts("ft", K, lowBound=0, upBound=MAX_FT, cat="Integer")
-    money = pulp.LpVariable.dicts("bank", K, lowBound=0)
+    def binvars(tag):
+        return {p: {k: pulp.LpVariable(f"{tag}_{p}_{k}", cat="Binary") for k in K} for p in P}
+
+    x = binvars("x")   # w składzie
+    s = binvars("s")   # w wyjściowej XI
+    c = binvars("c")   # kapitan
+    b = binvars("b")   # zakup
+    q = binvars("q")   # sprzedaż
+    hits = {k: pulp.LpVariable(f"hits_{k}", lowBound=0, cat="Integer") for k in K}
+    f = {k: pulp.LpVariable(f"ft_{k}", lowBound=0, upBound=MAX_FT, cat="Integer") for k in K}
+    money = {k: pulp.LpVariable(f"bank_{k}", lowBound=0) for k in K}
 
     ev = lambda p, k: pred.get((p, k), 0.0)
     prob += pulp.lpSum(

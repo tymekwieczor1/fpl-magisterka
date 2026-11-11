@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/claude/fpl-magisterka/src/backtest.py", line 105, in <module>
+    out = run(st, hz, panel)
+  File "/home/claude/fpl-magisterka/src/backtest.py", line 81, in run
+    dec = solve(players, pred_pool, current=squad, bank=bank, ft=ft,
+                free_transfers=(squad is None))
+  File "/home/claude/fpl-magisterka/src/optimize.py", line 36, in solve
+    x = pulp.LpVariable.dicts("x", (P, K), cat="Binary")   # w składzie
+        ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'LpVariable' has no attribute 'dicts'
