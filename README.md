@@ -8,9 +8,9 @@ predykcja punktów (GBM) + optymalizacja składu i transferów (MILP, horyzont k
 pip install -r requirements.txt
 # dane historyczne (vaastav) – pobierane do data/raw/vaastav, nie są w repo
 for s in 2022-23 2023-24 2024-25 2025-26 2026-27; do mkdir -p data/raw/vaastav/$s; for f in gws/merged_gw.csv fixtures.csv teams.csv players_raw.csv; do curl -s https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/$s/$f -o data/raw/vaastav/$s/$(basename $f); done; done
-python src/predict_eval.py      # walk-forward, sezon testowy 2025/26 (~4 min)
-python src/backtest.py full pts_only xg_only no_fdr no_minutes baseline hold_full oracle
-python src/summarize.py
+for s in 2023-24 2024-25 2025-26; do python src/predict_eval.py $s; python src/backtest.py $s full pts_only xg_only no_fdr no_minutes baseline hold_full oracle; done
+
+python src/summarize.py 2023-24 2024-25 2025-26
 ```
 
 ## Struktura

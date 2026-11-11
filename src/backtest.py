@@ -6,7 +6,7 @@ Dla każdej kolejki sezonu testowego:
 3. liczymy rzeczywiste punkty (z automatycznymi zmianami i wicekapitanem),
 4. aktualizujemy skład, bank i liczbę darmowych transferów.
 
-Użycie: python src/backtest.py full baseline xP oracle hold_full
+Użycie: python src/backtest.py 2025-26 full baseline xP oracle hold_full
 """
 import sys
 import time
@@ -97,11 +97,12 @@ def run(strategy, hz, panel, season="2025-26"):
 
 
 if __name__ == "__main__":
-    strategies = sys.argv[1:] or ["full"]
-    hz = pd.read_csv(RES / "horizon_preds_2025-26.csv")
+    # użycie: python src/backtest.py 2024-25 full baseline ...
+    season, strategies = sys.argv[1], sys.argv[2:] or ["full"]
+    hz = pd.read_csv(RES / f"horizon_preds_{season}.csv")
     panel = load_panel()
     for st in strategies:
         t0 = time.time()
-        out = run(st, hz, panel)
-        out.to_csv(RES / f"backtest_{st}_2025-26.csv", index=False)
+        out = run(st, hz, panel, season=season)
+        out.to_csv(RES / f"backtest_{st}_{season}.csv", index=False)
         print(f"{st}: suma netto {out.net.sum():.0f} pkt, czas {time.time() - t0:.0f} s")

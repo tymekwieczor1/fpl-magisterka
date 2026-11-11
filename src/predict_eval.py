@@ -88,11 +88,12 @@ def metrics(preds: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
+    season = sys.argv[1] if len(sys.argv) > 1 else "2025-26"
     t0 = time.time()
     df, groups = build_features(load_panel())
-    preds = walk_forward(df, groups)
-    preds.to_csv(OUT / "predictions_2025-26.csv", index=False)
+    preds = walk_forward(df, groups, test_season=season)
+    preds.to_csv(OUT / f"predictions_{season}.csv", index=False)
     m = metrics(preds)
-    m.to_csv(OUT / "metrics_2025-26.csv", index=False)
+    m.to_csv(OUT / f"metrics_{season}.csv", index=False)
     print(m.to_string(index=False))
     print(f"czas: {time.time() - t0:.0f} s")
