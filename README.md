@@ -25,3 +25,17 @@ python src/summarize.py 2023-24 2024-25 2025-26
 ## Uwaga metodologiczna
 Kolumna `xP` z repozytorium vaastav zawiera informację z rozegranej kolejki
 (przeciek) i w 2025/26 jest pusta w 28/38 kolejek – nie używamy jej ani jako cechy, ani jako benchmarku.
+
+## Test prospektywny 2026/27 (`src/live.py`)
+Uruchamiany automatycznie we wtorki i piątki o 08:43 UTC. Przy ostatnim uruchomieniu
+przed terminem kolejki zapisuje decyzję modelu w `live/decisions/gwNN.json`
+(commit sprzed terminu = dowód, że decyzja nie była zmieniana po fakcie), a po
+zakończeniu kolejki dopisuje wynik do `live/results.csv` razem ze średnią
+wszystkich menedżerów. Wirtualny menedżer startuje w GW11 z budżetem 100,0 mln.
+W `data/live/` zapisywane są prognozy modelu dla wszystkich zawodników oraz
+oficjalna prognoza FPL (`ep_next`) z dnia decyzji.
+
+```bash
+python src/live.py            # normalny przebieg
+python src/live.py --dry-run  # podgląd decyzji bez zapisu
+```
